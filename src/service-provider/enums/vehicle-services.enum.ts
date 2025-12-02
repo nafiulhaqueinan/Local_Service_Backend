@@ -1,0 +1,6 @@
+export enum VehicleServicesEnum {
+  CAR_MECHANIC = 'CAR_MECHANIC',
+  BIKE_MECHANIC = 'BIKE_MECHANIC',
+  CAR_WASH = 'CAR_WASH',
+  BIKE_WASH = 'BIKE_WASH',
+}
