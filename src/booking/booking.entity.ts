@@ -14,13 +14,16 @@ export class Booking {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Customer, (c) => c.bookings, { eager: true })
+  @ManyToOne(() => Customer, (c) => c.bookings, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   customer: Customer;
 
   @ManyToOne(
     () => ServiceProvider,
     (serviceProvider) => serviceProvider.bookings,
-    { eager: true },
+    { eager: true, onDelete: 'CASCADE' },
   )
   provider: ServiceProvider;
 

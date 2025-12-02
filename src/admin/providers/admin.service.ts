@@ -59,6 +59,7 @@ export class AdminService {
       },
     });
 
+    console.log(provider);
     if (!provider) {
       throw new HttpException('Service provider not found', 404);
     }
