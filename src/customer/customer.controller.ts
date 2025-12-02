@@ -21,6 +21,6 @@ export class CustomerController {
   @UseGuards(CustomerJwtAuthGuard)
   @Get('profile')
   profile(@Req() req: any) {
-    return this.customerService.getProfile(req.process?.email);
+    return this.customerService.getProfile(req.customer?.email);
   }
 }

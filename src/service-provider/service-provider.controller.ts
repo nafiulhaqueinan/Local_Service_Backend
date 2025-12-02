@@ -58,6 +58,6 @@ export class ServiceProviderController {
   @UseGuards(JwtAuthGuard)
   @Get('profile/')
   profile(@Req() req: any) {
-    return this.serviceProviderService.getProfile(req.process?.email);
+    return this.serviceProviderService.getProfile(req.provider?.email);
   }
 }
