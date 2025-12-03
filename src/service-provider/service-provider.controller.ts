@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Req,
   UploadedFile,
@@ -14,6 +15,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage, MulterError } from 'multer';
 import { ServiceProviderService } from './providers/service-provider.service';
 import { JwtAuthGuard } from './common/jwt-auth.guard';
+import { UpdateProviderCategoryDto } from './dtos/update-provider-category.dto';
 
 @Controller('service-provider')
 export class ServiceProviderController {
@@ -59,5 +61,23 @@ export class ServiceProviderController {
   @Get('profile/')
   profile(@Req() req: any) {
     return this.serviceProviderService.getProfile(req.provider?.email);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('update-price')
+  updatePrice(@Req() req: any, @Body('price') price: number) {
+    return this.serviceProviderService.updatePrice(req.provider.email, price);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('change-category')
+  updateCategory(
+    @Req() req: any,
+    @Body() updateProviderCategorydto: UpdateProviderCategoryDto,
+  ) {
+    return this.serviceProviderService.updateCategory(
+      req.provider.email,
+      updateProviderCategorydto,
+    );
   }
 }

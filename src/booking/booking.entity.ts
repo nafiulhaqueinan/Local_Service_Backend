@@ -15,7 +15,7 @@ export class Booking {
   id: number;
 
   @ManyToOne(() => Customer, (c) => c.bookings, {
-    eager: true,
+    // eager: true,
     onDelete: 'CASCADE',
   })
   customer: Customer;
@@ -23,7 +23,10 @@ export class Booking {
   @ManyToOne(
     () => ServiceProvider,
     (serviceProvider) => serviceProvider.bookings,
-    { eager: true, onDelete: 'CASCADE' },
+    {
+      // eager: true,
+      onDelete: 'CASCADE',
+    },
   )
   provider: ServiceProvider;
 

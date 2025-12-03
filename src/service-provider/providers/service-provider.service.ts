@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -14,6 +15,7 @@ import { MainCategoryEnum } from '../enums/main-category.enum';
 import { ProviderRegisterResponseDto } from '../dtos/provider-register-response.dto';
 import { ProviderLoginDto } from '../dtos/provider-login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { UpdateProviderCategoryDto } from '../dtos/update-provider-category.dto';
 
 @Injectable()
 export class ServiceProviderService {
@@ -110,5 +112,69 @@ export class ServiceProviderService {
     }
     const { id, password, ...result } = provider;
     return result;
+  }
+
+  public async updatePrice(email: string, price: number) {
+    const provider = await this.serviceProviderRepository.findOne({
+      where: { email },
+    });
+
+    if (!provider) {
+      throw new HttpException('Provider not found', 404);
+    }
+
+    await this.serviceProviderRepository.update(provider.id, { price: price });
+
+    return {
+      updated: true,
+      providerId: provider.id,
+      newPrice: price,
+      message: 'Price updated successfully',
+    };
+  }
+
+  public async updateCategory(
+    email: string,
+    updateProviderCategorydto: UpdateProviderCategoryDto,
+  ) {
+    const provider = await this.serviceProviderRepository.findOne({
+      where: { email },
+    });
+
+    if (!provider) {
+      throw new HttpException('Provider Not Found', 404);
+    }
+
+    let subcategory: string;
+    switch (updateProviderCategorydto.category) {
+      case MainCategoryEnum.HOUSEHOLD:
+        subcategory = updateProviderCategorydto.householdService;
+        break;
+
+      case MainCategoryEnum.TECHNOLOGY:
+        subcategory = updateProviderCategorydto.technologyService;
+        break;
+
+      case MainCategoryEnum.VEHICLE:
+        subcategory = updateProviderCategorydto.vehicleService;
+        break;
+
+      default:
+        throw new BadRequestException('Invalid category selected');
+    }
+
+    await this.serviceProviderRepository.update(provider.id, {
+      category: updateProviderCategorydto.category,
+      subcategory,
+    });
+
+    return {
+      updated: true,
+      providerId: provider.id,
+      email: provider.email,
+      newCategory: updateProviderCategorydto.category,
+      subcategory: subcategory,
+      message: 'Category updated successfully',
+    };
   }
 }

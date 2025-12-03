@@ -46,7 +46,19 @@ export class BookingService {
   }
 
   async getByProvider(email: string) {
-    return this.bookingRepo.find({ where: { provider: { email } } });
+    // return this.bookingRepo.find({ where: { provider: { email } } });
+    return this.bookingRepo.find({
+      where: {
+        provider: { email },
+      },
+      relations: ['provider', 'customer'],
+      select: {
+        id: true,
+        status: true,
+        provider: { fullName: true, email: true, phone: true },
+        customer: { fullName: true, email: true, phone: true },
+      },
+    });
   }
 
   async updateStatus(id: number, status: string) {
