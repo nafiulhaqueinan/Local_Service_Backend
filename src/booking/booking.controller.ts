@@ -39,10 +39,16 @@ export class BookingController {
 
   @UseGuards(JwtAuthGuard)
   @Patch('status/:id')
-  async providerUpdateStatus(
+  providerUpdateStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: any,
   ) {
     return this.bookingService.updateStatus(id, body.status);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('completed-order')
+  completedOrder(@Req() req: any) {
+    return this.bookingService.getCompletedOrder(req.provider.email);
   }
 }

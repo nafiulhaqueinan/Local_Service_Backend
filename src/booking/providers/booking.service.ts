@@ -68,4 +68,30 @@ export class BookingService {
     await this.bookingRepo.save(booking);
     return booking;
   }
+
+  async getCompletedOrder(email: string) {
+    return await this.bookingRepo.find({
+      where: {
+        provider: { email },
+        status: 'complete',
+      },
+      relations: ['customer', 'provider'],
+      select: {
+        id: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+        customer: {
+          fullName: true,
+          phone: true,
+        },
+        provider: {
+          fullName: true,
+          email: true,
+          phone: true,
+        },
+      },
+      order: { updatedAt: 'DESC' },
+    });
+  }
 }
