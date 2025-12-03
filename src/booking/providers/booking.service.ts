@@ -94,4 +94,18 @@ export class BookingService {
       order: { updatedAt: 'DESC' },
     });
   }
+
+  async getByBookingId(id: number) {
+    return this.bookingRepo.find({ where: { id } });
+  }
+
+  async getByProviderId(id: string) {
+    const provider = await this.bookingRepo.findOne({
+      where: {
+        provider: { id },
+      },
+    });
+
+    return provider;
+  }
 }

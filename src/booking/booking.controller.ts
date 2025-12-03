@@ -51,4 +51,16 @@ export class BookingController {
   completedOrder(@Req() req: any) {
     return this.bookingService.getCompletedOrder(req.provider.email);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('getbyProviderId/:id')
+  getAll(@Param('id') id: string) {
+    return this.bookingService.getByProviderId(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('getbyBooking/:id')
+  public getBybookingId(@Param('id', ParseIntPipe) id: number) {
+    return this.bookingService.getByBookingId(id);
+  }
 }

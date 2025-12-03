@@ -80,4 +80,17 @@ export class ServiceProviderController {
       updateProviderCategorydto,
     );
   }
+
+  @Post('forget-password')
+  forgetPassword(@Body('email') email: string) {
+    return this.serviceProviderService.forgetPassword(email);
+  }
+
+  @Patch('reset-password/:id')
+  resetPassword(
+    @Param('id') id: string,
+    @Body('newPassword') newPassword: string,
+  ) {
+    return this.serviceProviderService.resetPassword(id, newPassword);
+  }
 }

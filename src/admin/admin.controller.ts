@@ -4,7 +4,9 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AdminService } from './providers/admin.service';
@@ -27,8 +29,32 @@ export class AdminController {
   }
 
   @UseGuards(AdminJwtAuthGuard)
+  @Get('customers')
+  public getCustomer() {
+    return this.adminService.listOfCustomer();
+  }
+
+  @UseGuards(AdminJwtAuthGuard)
   @Delete('provider/:id')
   public deleteProvider(@Param('id') id: string) {
     return this.adminService.deleteProviders(id);
+  }
+
+  @UseGuards(AdminJwtAuthGuard)
+  @Delete('customer/:id')
+  public deleteCustomer(@Param('id', ParseIntPipe) id: number) {
+    return this.adminService.deleteCustomer(id);
+  }
+
+  @UseGuards(AdminJwtAuthGuard)
+  @Post('assign-provider/:providerId')
+  assignProvider(@Req() req, @Param('providerId') providerId: string) {
+    return this.adminService.assignProvider(req.admin?.email, providerId);
+  }
+
+  @UseGuards(AdminJwtAuthGuard)
+  @Get('my-providers')
+  getMyProviders(@Req() req) {
+    return this.adminService.getProvidersUnderAdmin(req.admin?.email);
   }
 }

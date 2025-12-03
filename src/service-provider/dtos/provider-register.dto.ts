@@ -16,6 +16,8 @@ import { MainCategoryEnum } from '../enums/main-category.enum';
 import { HouseholdServicesEnum } from '../enums/household-services.enum';
 import { TechnologyServicesEnum } from '../enums/technology-services.enum';
 import { VehicleServicesEnum } from '../enums/vehicle-services.enum';
+import { Admin } from '../../admin/admin.entity';
+import { ManyToOne } from 'typeorm';
 
 export class ProviderRegisterDto {
   @IsString()

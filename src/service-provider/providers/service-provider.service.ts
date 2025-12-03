@@ -16,11 +16,13 @@ import { ProviderRegisterResponseDto } from '../dtos/provider-register-response.
 import { ProviderLoginDto } from '../dtos/provider-login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateProviderCategoryDto } from '../dtos/update-provider-category.dto';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class ServiceProviderService {
   constructor(
     private jwtService: JwtService,
+    private mailService: MailerService,
     @InjectRepository(ServiceProvider)
     private readonly serviceProviderRepository: Repository<ServiceProvider>,
   ) {}
@@ -176,5 +178,42 @@ export class ServiceProviderService {
       subcategory: subcategory,
       message: 'Category updated successfully',
     };
+  }
+
+  public async forgetPassword(email: string) {
+    const provider = await this.serviceProviderRepository.findOne({
+      where: { email },
+    });
+
+    if (!provider) {
+      throw new HttpException('Service Provider not found', 404);
+    }
+
+    await this.mailService.sendMail({
+      to: email,
+      subject: 'Password Reset Request',
+      text: `Hello ${provider.fullName}, click the link below to reset your password.`,
+      html: `<h3>Hello ${provider.fullName}</h3>
+             <p>Click this link to reset your password:</p>
+             <a href="http://localhost:3000/service-provider/reset-password/${provider.id}">Reset Password</a>`,
+    });
+    return { message: 'Reset email sent!' };
+  }
+
+  async resetPassword(id: string, newPassword: string) {
+    const provider = await this.serviceProviderRepository.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!provider) {
+      throw new HttpException('Email not found', 404);
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    provider.password = hashedPassword;
+
+    await this.serviceProviderRepository.save(provider);
+
+    return { message: 'Password reset successful' };
   }
 }

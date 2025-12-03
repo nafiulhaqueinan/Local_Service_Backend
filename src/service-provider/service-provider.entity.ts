@@ -1,8 +1,10 @@
+import { Admin } from 'src/admin/admin.entity';
 import { Booking } from 'src/booking/booking.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -51,4 +53,10 @@ export class ServiceProvider {
 
   @OneToMany(() => Booking, (booking) => booking.provider)
   bookings: Booking[];
+
+  @ManyToOne(() => Admin, (provider) => provider.serviceProviders, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  admin: Admin;
 }

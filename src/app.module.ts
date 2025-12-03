@@ -6,9 +6,21 @@ import { AdminModule } from './admin/admin.module';
 import { CustomerModule } from './customer/customer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BookingModule } from './booking/booking.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
+    MailerModule.forRoot({
+      transport: {
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: 'nafiul9575@gmail.com',
+          pass: 'ikfw psdb tywn flwu',
+        },
+      },
+    }),
     ServiceProviderModule,
     AdminModule,
     CustomerModule,
